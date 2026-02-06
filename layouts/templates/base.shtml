@@ -13,7 +13,9 @@
 		<super>
 	</head>
 	<body id="body">
-		<h1 class="site-title" :text="$site.title"></h1>
+		<div class="article-meta">
+			<h1 class="site-title" :text="$site.title"></h1>
+		</div>
 		<nav>
 			<a href="$site.page('').link()">Home</a>
 			&nbsp; • &nbsp;
@@ -25,6 +27,23 @@
 				<a href="$if.link()">Devlog</a>
 			</ctx>
 		</nav>
+		<div class="article-meta">
+			<h1 id="contact">Contact</h1>
+		</div>
+		<table>
+			<tr>
+				<td>Email:</td>
+				<td>khanosaid726@gmail.com</td>
+			</tr>
+			<tr>
+				<td>Github:</td>
+				<td>github.com/ozzyozbourne</td>
+			</tr>
+			<tr>
+				<td>Youtube:</td>
+				<td>youtube.com/@null_ptr_0x00</td>
+			</tr>
+		</table>
 		<super>
 		<footer>
 			<hr>
