@@ -5,8 +5,10 @@
 .layout = "devlog.shtml",
 .draft = false,
 --- 
-[]($section.id('about'))
+[]($section.id('about-1'))
 ## About this Devlog
+
+
 
 This is where you should describe to your users what your devlog is about.
 Refer to the corresponding section in the home page to learn more about devlogs.
@@ -36,3 +38,8 @@ This is the second entry.
 ## [Hello Zine]($section.id("1990-01-01T00:00:00"))
 This is the first entry in this year's devlog created with
 [Zine](https://zine-ssg.io)!
+
+
+[]($section.id('about-2'))
+## About this Devlog
+

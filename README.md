@@ -1,6 +1,6 @@
 # [My Ramblings](https://ozzyozbourne.github.io/ozzy) 
 
-| [![GitHub Pages][gh-badge]][gh-link]    | [![License][license]][license-link]                         |
+| [![GitHub Pages][gh-badge]][gh-link]    | [![License][license]][license-link]         |
 | :-------------------------------------- | :------------------------------------------ |
 | [![Deploy Status][de-badge]][de-status] | [![Built with Zine][zine-badge]][zine-link] |
 

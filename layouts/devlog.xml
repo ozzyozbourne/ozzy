@@ -7,7 +7,7 @@
     <language>en-US</language>
     <lastBuildDate :text="$build.generated.formatHTTP()"></lastBuildDate>
     <ctx :if="$page.subpages().first?()">
-      <ctx :loop="$if.contentSections().slice(1)">
+      <ctx :loop="$if.contentSections().slice(1, 2)">
         <item>
           <title :text="$loop.it.heading()"></title>
           <description :text="$loop.it.html()"></description>
