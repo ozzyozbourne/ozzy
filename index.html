@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ozzy Notes</title>
+    <link rel="stylesheet" href="assets/site.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <h1 class="site-title">Ozzy Notes</h1>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="posts/first-post.html">Blog</a>
+      </nav>
+    </header>
+
+    <main>
+      <article>
+        <h1>A small static blog</h1>
+        <p class="subtitle">Plain HTML, quiet Tufte styling, and margin notes that wake up on scroll.</p>
+
+        <section>
+          <p><span class="newthought">This site is deliberately small.</span> There is no build step, no client-side router, and no component framework. Each page is a normal HTML file, and the visual system lives in one CSS file.</p>
+          <p>The layout borrows the useful parts of Tufte CSS: generous reading space, serif type, restrained links, and notes in the margin for asides that belong near the text.</p>
+        </section>
+
+        <section>
+          <h2>Posts</h2>
+          <div class="post-list">
+            <a class="post-link" href="posts/first-post.html">
+              <strong>First Post</strong>
+              <span>A short sample article with sidenotes, a margin note, code, and scroll-driven note animation.</span>
+            </a>
+          </div>
+        </section>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      Static HTML. One stylesheet. No build system.
+    </footer>
+  </body>
+</html>
