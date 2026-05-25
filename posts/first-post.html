@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>First Post - Ozzy Notes</title>
+    <link rel="stylesheet" href="../assets/site.css">
+  </head>
+  <body>
+    <header class="site-header">
+      <p class="site-title">Ozzy Notes</p>
+      <nav class="site-nav" aria-label="Main navigation">
+        <a href="../index.html">Home</a>
+        <a href="first-post.html">Blog</a>
+      </nav>
+    </header>
+
+    <main>
+      <article>
+        <h1>First Post</h1>
+        <p class="post-meta">May 25, 2026</p>
+
+        <section>
+          <p><span class="newthought">A static blog can stay simple</span> and still feel considered.<label for="sn-simple" class="sidenote-number"></label><input id="sn-simple" class="margin-toggle" type="checkbox"><span class="sidenote">The note markup is intentionally plain: a label, a hidden checkbox, and a span. CSS handles desktop margin placement and mobile toggling.</span> The useful work happens in the HTML document itself, where writing, links, headings, and notes remain visible without a build pipeline.</p>
+
+          <p>The background is cooler than stock Tufte CSS, moving away from the familiar yellow paper tone while keeping the low-contrast reading surface. The result is still bookish, but less sepia.</p>
+
+          <p><label for="mn-progressive" class="margin-symbol">&#8853;</label><input id="mn-progressive" class="margin-toggle" type="checkbox"><span class="marginnote">Scroll-driven note animation is progressive. If the browser supports `animation-timeline: view()`, margin notes gently enter as they pass through the viewport.</span> The animation is also plain CSS. Unsupported browsers ignore it and keep the notes readable in their normal static position.</p>
+        </section>
+
+        <section>
+          <h2>Markup Shape</h2>
+          <p>The page does not need a custom component model to keep repeated ideas understandable. The sidenote pattern is short enough to paste where the note belongs, and that keeps the source close to the article.</p>
+
+          <pre><code>&lt;p&gt;
+  Text with a sidenote
+  &lt;label for="sn-demo" class="sidenote-number"&gt;&lt;/label&gt;
+  &lt;input id="sn-demo" class="margin-toggle" type="checkbox"&gt;
+  &lt;span class="sidenote"&gt;The note text.&lt;/span&gt;
+&lt;/p&gt;</code></pre>
+
+          <p>For margin notes without numbering, use the same checkbox and span, but swap in a symbol label and the <code>marginnote</code> class. On wide screens the symbol hides and the note simply sits in the margin.</p>
+        </section>
+
+        <section>
+          <h2>Why This Stays Small</h2>
+          <p>Most personal blogs do not need data fetching, hydration, or a templating layer on day one.<label for="sn-small" class="sidenote-number"></label><input id="sn-small" class="margin-toggle" type="checkbox"><span class="sidenote">The tradeoff is that shared navigation is copied between pages. For a two-page site, that is simpler than introducing a build tool.</span> Plain files are easy to inspect, move, publish, and repair.</p>
+
+          <blockquote>
+            <p>Simple code is not automatically better, but code that can be read in one sitting has a real maintenance advantage.</p>
+          </blockquote>
+
+          <p>The next post can be created by copying this file, changing the title and date, and adding a link on the home page. That is enough structure for a small static notebook.</p>
+        </section>
+
+        <section>
+          <h2>Enough Page To Scroll</h2>
+          <p>The animation only becomes visible when the page has real scroll distance. A note that starts in the first viewport may already be at the end of its view timeline by the time the reader notices it.</p>
+
+          <p>This extra section exists to make the demo honest. It gives the browser room to move each note through the viewport, which gives <code>animation-timeline: view()</code> a changing progress value to work with.</p>
+
+          <p>As you scroll, this lower sidenote should fade and slide into place.<label for="sn-scroll-room" class="sidenote-number"></label><input id="sn-scroll-room" class="margin-toggle" type="checkbox"><span class="sidenote">This is the first lower test note. It should be easier to see than the first note because it begins below the initial viewport.</span> The effect is intentionally small enough to stay quiet, but now it should be visible instead of theoretical.</p>
+
+          <p>The rest of this section is ordinary writing. That is the point: the animation should decorate the reading experience without changing the structure of the document or requiring JavaScript.</p>
+        </section>
+
+        <section>
+          <h2>Previewing Locally</h2>
+          <p>Opening the file directly still works, but some browsers print noisy <code>file://</code> warnings in the console. A local server avoids that without changing how the site is built.</p>
+
+          <pre><code>python3 -m http.server 8080</code></pre>
+
+          <p>Then open <code>http://localhost:8080/</code>. That keeps the site build-free while giving the browser a normal origin for links and assets.</p>
+
+          <p><label for="mn-localhost" class="margin-symbol">&#8853;</label><input id="mn-localhost" class="margin-toggle" type="checkbox"><span class="marginnote">The local server is only for previewing. The files are still static and can be published as-is.</span> This note is another lower-page animation target. It should enter later than the first few notes and make the scroll-driven behavior easier to confirm.</p>
+        </section>
+
+        <section>
+          <h2>One More Pass</h2>
+          <p>There is still no dependency graph here. The home page links to this post, this post links back home, and the stylesheet is the only shared asset.</p>
+
+          <p>A blog can grow from this shape slowly. When there are five posts, copying the header is still acceptable. When there are fifty, that is the moment to introduce a generator or a tiny include step.</p>
+
+          <p>The important part is that the first version stays understandable. The markup for the notes is visible in the article, the CSS owns the layout, and the browser does the animation when it knows how.<label for="sn-last" class="sidenote-number"></label><input id="sn-last" class="margin-toggle" type="checkbox"><span class="sidenote">This final note should animate near the bottom of the article. It is a practical check that the demo still works after a full-page scroll.</span></p>
+        </section>
+      </article>
+    </main>
+
+    <footer class="site-footer">
+      <a href="../index.html">Back home</a>
+    </footer>
+  </body>
+</html>
