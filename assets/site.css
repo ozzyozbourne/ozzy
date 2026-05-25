@@ -31,7 +31,7 @@
   --rule: #d8d8d0;
   --note: #30302c;
   --link: #1f4f7a;
-  --measure: 38rem;
+  --measure: 52rem;
 }
 
 * {
@@ -45,9 +45,9 @@ html {
 }
 
 body {
-  width: min(88%, 88rem);
+  width: min(94%, 100rem);
   margin: 0 auto;
-  padding: 0 0 4rem 10%;
+  padding: 0 0 4rem 4%;
   font-family: et-book, Palatino, "Palatino Linotype", Georgia, serif;
   counter-reset: sidenote-counter;
 }
@@ -216,7 +216,7 @@ pre {
   float: right;
   clear: right;
   width: 18rem;
-  margin: 0.35rem -22rem 0 2rem;
+  margin: 0.35rem -30rem 0 3rem;
   color: var(--note);
   font-size: 1rem;
   line-height: 1.35;
