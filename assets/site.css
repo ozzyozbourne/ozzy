@@ -86,14 +86,7 @@ section {
   padding: 1rem 0;
 }
 
-section > h1,
-section > h2,
-section > h3,
-section > p,
-section > pre,
-section > blockquote,
-section > ul,
-section > ol {
+section > *:not(.row) {
   max-width: var(--measure);
 }
 
@@ -282,21 +275,6 @@ label.margin-symbol {
       opacity: 1;
       transform: translateY(0);
     }
-  }
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --paper: #171717;
-    --ink: #e8e8e2;
-    --muted: #aaa;
-    --rule: #3a3a34;
-    --note: #d0d0c8;
-    --link: #9fc9ef;
-  }
-
-  pre {
-    background: #101010;
   }
 }
 
