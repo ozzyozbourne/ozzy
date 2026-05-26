@@ -31,7 +31,7 @@
   --rule: #d8d8d0;
   --note: #30302c;
   --link: #1f4f7a;
-  --measure: 52rem;
+  --measure: 70rem;
 }
 
 * {
@@ -216,7 +216,7 @@ pre {
   float: right;
   clear: right;
   width: 18rem;
-  margin: 0.35rem -30rem 0 3rem;
+  margin: 0.35rem calc(var(--measure) - 82rem) 0 3rem;
   color: var(--note);
   font-size: 1rem;
   line-height: 1.35;
