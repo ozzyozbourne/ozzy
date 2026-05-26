@@ -216,7 +216,7 @@ pre {
   float: right;
   clear: right;
   width: 18rem;
-  margin: 0.35rem calc(var(--measure) - 82rem) 0 3rem;
+  margin: 0.35rem -22rem 0 3rem;
   color: var(--note);
   font-size: 1rem;
   line-height: 1.35;
