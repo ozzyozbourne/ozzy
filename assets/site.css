@@ -82,25 +82,27 @@ article {
   padding: 2rem 0;
 }
 
-/* Master grid: every section owns the two-column layout */
 section {
+  padding: 1rem 0;
+}
+
+section > h1,
+section > h2,
+section > h3,
+section > p,
+section > pre,
+section > blockquote,
+section > ul,
+section > ol {
+  max-width: var(--measure);
+}
+
+/* The only layout primitive: text on the left, optional note on the right. */
+.row {
   display: grid;
   grid-template-columns: var(--measure) var(--note-width);
   column-gap: var(--gap);
   align-items: start;
-  padding: 1rem 0;
-}
-
-/* All direct children default to the text column */
-section > * {
-  grid-column: 1;
-}
-
-/* .row spans both columns and inherits their widths via subgrid */
-.row {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: subgrid;
 }
 
 h1,
@@ -312,7 +314,7 @@ label.margin-symbol {
     font-size: 2.5rem;
   }
 
-  section {
+  .row {
     grid-template-columns: 1fr;
   }
 
@@ -326,8 +328,7 @@ label.margin-symbol {
     cursor: pointer;
   }
 
-  .row:has(.margin-toggle:checked) .sidenote,
-  .row:has(.margin-toggle:checked) .marginnote {
+  .row:has(.margin-toggle:checked) :is(.sidenote, .marginnote) {
     display: block;
     margin: 1rem 0;
     padding-left: 1rem;
