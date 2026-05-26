@@ -8,7 +8,7 @@
   </head>
   <body>
     <header class="site-header">
-      <p class="site-title">Ozzy Notes</p>
+      <h1 class="site-title">Ozzy Notes</h1>
       <nav class="site-nav" aria-label="Main navigation">
         <a href="../index.html">Home</a>
         <a href="first-post.html">Blog</a>
@@ -17,8 +17,10 @@
 
     <main>
       <article>
-        <h1>First Post</h1>
-        <p class="post-meta">May 25, 2026</p>
+        <section>
+          <h1>First Post</h1>
+          <p class="post-meta">May 25, 2026</p>
+        </section>
 
         <section>
           <div class="row">
@@ -43,12 +45,14 @@
             <p>The page does not need a custom component model to keep repeated ideas understandable. The sidenote pattern is short enough to paste where the note belongs, and that keeps the source close to the article.</p>
           </div>
 
-          <pre><code>&lt;p&gt;
-  Text with a sidenote
-  &lt;label for="sn-demo" class="sidenote-number"&gt;&lt;/label&gt;
-  &lt;input id="sn-demo" class="margin-toggle" type="checkbox"&gt;
-&lt;/p&gt;
-&lt;span class="sidenote"&gt;The note text.&lt;/span&gt;</code></pre>
+          <pre><code>&lt;div class="row"&gt;
+  &lt;p&gt;
+    Text with a sidenote
+    &lt;label for="sn-demo" class="sidenote-number"&gt;&lt;/label&gt;
+    &lt;input id="sn-demo" class="margin-toggle" type="checkbox"&gt;
+  &lt;/p&gt;
+  &lt;span class="sidenote"&gt;The note text.&lt;/span&gt;
+&lt;/div&gt;</code></pre>
 
           <div class="row">
             <p>For margin notes without numbering, use the same checkbox and span, but swap in a symbol label and the <code>marginnote</code> class. On wide screens the symbol hides and the note simply sits in the margin.</p>

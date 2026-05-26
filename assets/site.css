@@ -86,7 +86,18 @@ section {
   padding: 1rem 0;
 }
 
-/* Two-column grid row: text column left, sidenote column right */
+section > h1,
+section > h2,
+section > h3,
+section > p,
+section > pre,
+section > blockquote,
+section > ul,
+section > ol {
+  max-width: var(--measure);
+}
+
+/* The only layout primitive: text on the left, optional note on the right. */
 .row {
   display: grid;
   grid-template-columns: var(--measure) var(--note-width);
@@ -97,7 +108,6 @@ section {
 h1,
 h2,
 h3 {
-  max-width: var(--measure);
   font-weight: 400;
   line-height: 1;
 }
@@ -126,18 +136,15 @@ li {
 }
 
 p {
-  max-width: var(--measure);
   margin: 1.2rem 0;
 }
 
 ul,
 ol {
-  max-width: var(--measure);
   padding-left: 1.4rem;
 }
 
 blockquote {
-  max-width: var(--measure);
   margin: 2rem 0;
   padding-left: 1.4rem;
   border-left: 1px solid var(--rule);
@@ -145,12 +152,10 @@ blockquote {
 }
 
 blockquote p {
-  width: 100%;
   font-style: italic;
 }
 
 hr {
-  max-width: var(--measure);
   margin: 2rem 0;
   border: 0;
   border-top: 1px solid var(--rule);
@@ -163,7 +168,6 @@ pre {
 }
 
 pre {
-  max-width: var(--measure);
   overflow-x: auto;
   padding: 1rem;
   border: 1px solid var(--rule);
@@ -180,7 +184,6 @@ pre {
 .post-list {
   display: grid;
   gap: 1rem;
-  max-width: var(--measure);
   margin-top: 2rem;
 }
 
@@ -213,7 +216,7 @@ pre {
   display: none;
 }
 
-/* Sidenote: styling only, layout handled by .row grid */
+/* Sidenote: styling only, position handled by subgrid */
 .sidenote,
 .marginnote {
   margin-top: 0.35rem;
@@ -251,6 +254,7 @@ label.margin-symbol {
   display: none;
 }
 
+/* Footer sits outside the section grid so needs its own constraint */
 .site-footer {
   max-width: var(--measure);
   margin-top: 3rem;
@@ -324,8 +328,7 @@ label.margin-symbol {
     cursor: pointer;
   }
 
-  .row:has(.margin-toggle:checked) .sidenote,
-  .row:has(.margin-toggle:checked) .marginnote {
+  .row:has(.margin-toggle:checked) :is(.sidenote, .marginnote) {
     display: block;
     margin: 1rem 0;
     padding-left: 1rem;
