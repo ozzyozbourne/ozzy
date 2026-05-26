@@ -82,22 +82,30 @@ article {
   padding: 2rem 0;
 }
 
+/* Master grid: every section owns the two-column layout */
 section {
-  padding: 1rem 0;
-}
-
-/* Two-column grid row: text column left, sidenote column right */
-.row {
   display: grid;
   grid-template-columns: var(--measure) var(--note-width);
   column-gap: var(--gap);
   align-items: start;
+  padding: 1rem 0;
+}
+
+/* All direct children default to the text column */
+section > * {
+  grid-column: 1;
+}
+
+/* .row spans both columns and inherits their widths via subgrid */
+.row {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: subgrid;
 }
 
 h1,
 h2,
 h3 {
-  max-width: var(--measure);
   font-weight: 400;
   line-height: 1;
 }
@@ -126,18 +134,15 @@ li {
 }
 
 p {
-  max-width: var(--measure);
   margin: 1.2rem 0;
 }
 
 ul,
 ol {
-  max-width: var(--measure);
   padding-left: 1.4rem;
 }
 
 blockquote {
-  max-width: var(--measure);
   margin: 2rem 0;
   padding-left: 1.4rem;
   border-left: 1px solid var(--rule);
@@ -145,12 +150,10 @@ blockquote {
 }
 
 blockquote p {
-  width: 100%;
   font-style: italic;
 }
 
 hr {
-  max-width: var(--measure);
   margin: 2rem 0;
   border: 0;
   border-top: 1px solid var(--rule);
@@ -163,7 +166,6 @@ pre {
 }
 
 pre {
-  max-width: var(--measure);
   overflow-x: auto;
   padding: 1rem;
   border: 1px solid var(--rule);
@@ -180,7 +182,6 @@ pre {
 .post-list {
   display: grid;
   gap: 1rem;
-  max-width: var(--measure);
   margin-top: 2rem;
 }
 
@@ -213,7 +214,7 @@ pre {
   display: none;
 }
 
-/* Sidenote: styling only, layout handled by .row grid */
+/* Sidenote: styling only, position handled by subgrid */
 .sidenote,
 .marginnote {
   margin-top: 0.35rem;
@@ -251,6 +252,7 @@ label.margin-symbol {
   display: none;
 }
 
+/* Footer sits outside the section grid so needs its own constraint */
 .site-footer {
   max-width: var(--measure);
   margin-top: 3rem;
@@ -310,7 +312,7 @@ label.margin-symbol {
     font-size: 2.5rem;
   }
 
-  .row {
+  section {
     grid-template-columns: 1fr;
   }
 
