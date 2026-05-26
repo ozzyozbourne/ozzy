@@ -31,7 +31,9 @@
   --rule: #d8d8d0;
   --note: #30302c;
   --link: #1f4f7a;
-  --measure: 70rem;
+  --measure: 60rem;
+  --note-width: 18rem;
+  --gap: 3rem;
 }
 
 * {
@@ -84,11 +86,18 @@ section {
   padding: 1rem 0;
 }
 
+/* Two-column grid row: text column left, sidenote column right */
+.row {
+  display: grid;
+  grid-template-columns: var(--measure) var(--note-width);
+  column-gap: var(--gap);
+  align-items: start;
+}
+
 h1,
 h2,
 h3 {
-  width: var(--measure);
-  max-width: 100%;
+  max-width: var(--measure);
   font-weight: 400;
   line-height: 1;
 }
@@ -111,30 +120,24 @@ h3 {
 }
 
 p,
-ul,
-ol,
-blockquote,
-pre {
-  width: var(--measure);
-  max-width: 100%;
-}
-
-p,
 li {
   font-size: 1.35rem;
   line-height: 1.55;
 }
 
 p {
+  max-width: var(--measure);
   margin: 1.2rem 0;
 }
 
 ul,
 ol {
+  max-width: var(--measure);
   padding-left: 1.4rem;
 }
 
 blockquote {
+  max-width: var(--measure);
   margin: 2rem 0;
   padding-left: 1.4rem;
   border-left: 1px solid var(--rule);
@@ -147,8 +150,7 @@ blockquote p {
 }
 
 hr {
-  width: var(--measure);
-  max-width: 100%;
+  max-width: var(--measure);
   margin: 2rem 0;
   border: 0;
   border-top: 1px solid var(--rule);
@@ -161,6 +163,7 @@ pre {
 }
 
 pre {
+  max-width: var(--measure);
   overflow-x: auto;
   padding: 1rem;
   border: 1px solid var(--rule);
@@ -177,8 +180,7 @@ pre {
 .post-list {
   display: grid;
   gap: 1rem;
-  width: var(--measure);
-  max-width: 100%;
+  max-width: var(--measure);
   margin-top: 2rem;
 }
 
@@ -211,12 +213,10 @@ pre {
   display: none;
 }
 
+/* Sidenote: styling only, layout handled by .row grid */
 .sidenote,
 .marginnote {
-  float: right;
-  clear: right;
-  width: 18rem;
-  margin: 0.35rem -22rem 0 3rem;
+  margin-top: 0.35rem;
   color: var(--note);
   font-size: 1rem;
   line-height: 1.35;
@@ -252,8 +252,7 @@ label.margin-symbol {
 }
 
 .site-footer {
-  width: var(--measure);
-  max-width: 100%;
+  max-width: var(--measure);
   margin-top: 3rem;
   padding-top: 1rem;
   border-top: 1px solid var(--rule);
@@ -311,6 +310,10 @@ label.margin-symbol {
     font-size: 2.5rem;
   }
 
+  .row {
+    grid-template-columns: 1fr;
+  }
+
   .sidenote,
   .marginnote {
     display: none;
@@ -321,11 +324,9 @@ label.margin-symbol {
     cursor: pointer;
   }
 
-  .margin-toggle:checked + .sidenote,
-  .margin-toggle:checked + .marginnote {
+  .row:has(.margin-toggle:checked) .sidenote,
+  .row:has(.margin-toggle:checked) .marginnote {
     display: block;
-    float: none;
-    width: 100%;
     margin: 1rem 0;
     padding-left: 1rem;
     border-left: 1px solid var(--rule);
