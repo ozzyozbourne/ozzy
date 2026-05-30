@@ -83,10 +83,7 @@ section {
     padding-top: 1rem;
     padding-bottom: 1rem;
 }
-p, dl, ol, ul {
-    font-size: 1.4rem;
-    line-height: 2rem;
-}
+p, dl, ol, ul { font-size: 1.4rem; line-height: 2rem; }
 p {
     margin-top: 1.4rem;
     margin-bottom: 1.4rem;
@@ -252,11 +249,7 @@ label.margin-toggle:not(.sidenote-number) { display: none; }
     height: 100%;
 }
 @media (max-width: 760px) {
-    body {
-        width: 84%;
-        padding-left: 8%;
-        padding-right: 8%;
-    }
+    body { width: 84%; padding-left: 8%; padding-right: 8%; }
     hr,
     section > p,
     section > footer,
@@ -267,14 +260,8 @@ label.margin-toggle:not(.sidenote-number) { display: none; }
     section > ul { width: 90%; }
     figure { max-width: 90%; }
     figcaption,
-    figure.fullwidth figcaption {
-        margin-right: 0%;
-        max-width: none;
-    }
-    blockquote {
-        margin-left: 1.5em;
-        margin-right: 0em;
-    }
+    figure.fullwidth figcaption { margin-right: 0%; max-width: none; }
+    blockquote { margin-left: 1.5em; margin-right: 0em; }
     blockquote p,
     blockquote footer { width: 100%; }
     label.margin-toggle:not(.sidenote-number) { display: inline; }
