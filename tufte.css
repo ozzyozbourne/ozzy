@@ -1,8 +1,4 @@
 @charset "UTF-8";
-
-/* Import ET Book styles
-   adapted from https://github.com/edwardtufte/et-book/blob/gh-pages/et-book.css */
-
 @font-face {
     font-family: "et-book";
     src: url("et-book/et-book-roman-line-figures/et-book-roman-line-figures.eot");
@@ -11,7 +7,6 @@
     font-style: normal;
     font-display: swap;
 }
-
 @font-face {
     font-family: "et-book";
     src: url("et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.eot");
@@ -20,7 +15,6 @@
     font-style: italic;
     font-display: swap;
 }
-
 @font-face {
     font-family: "et-book";
     src: url("et-book/et-book-bold-line-figures/et-book-bold-line-figures.eot");
@@ -29,7 +23,6 @@
     font-style: normal;
     font-display: swap;
 }
-
 @font-face {
     font-family: "et-book-roman-old-style";
     src: url("et-book/et-book-roman-old-style-figures/et-book-roman-old-style-figures.eot");
@@ -39,11 +32,7 @@
     font-display: swap;
 }
 
-/* Tufte CSS styles */
-html {
-    font-size: 15px;
-}
-
+html { font-size: 15px; }
 body {
     width: 87.5%;
     margin-left: auto;
@@ -56,7 +45,6 @@ body {
     counter-reset: sidenote-counter;
 }
 
-/* Adds dark mode */
 @media (prefers-color-scheme: dark) {
     body {
         background-color: #151515;
@@ -109,17 +97,11 @@ p.subtitle {
     line-height: 1;
 }
 
-.numeral {
-    font-family: et-book-roman-old-style;
-}
+.numeral { font-family: et-book-roman-old-style; }
 
-.danger {
-    color: red;
-}
+.danger { color: red; }
 
-article {
-    padding: 5rem 0rem;
-}
+article { padding: 5rem 0rem; }
 
 section {
     padding-top: 1rem;
@@ -142,9 +124,7 @@ p {
 }
 
 /* Chapter Epigraphs */
-div.epigraph {
-    margin: 5em 0;
-}
+div.epigraph { margin: 5em 0; }
 
 div.epigraph > blockquote {
     margin-top: 3em;
@@ -235,9 +215,7 @@ a:visited {
 }
 
 /* Sidenotes, margin notes, figures, captions */
-img {
-    max-width: 100%;
-}
+img { max-width: 100%; }
 
 .sidenote,
 .marginnote {
