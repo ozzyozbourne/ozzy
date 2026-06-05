@@ -204,9 +204,7 @@ code, pre > code {
     -webkit-text-size-adjust: 100%; /* Prevent adjustments of font size after orientation changes in iOS. See https://github.com/edwardtufte/tufte-css/issues/81#issuecomment-261953409 */
 }
 .sans > code { font-size: 1.2rem; }
-h1 > code,
-h2 > code,
-h3 > code { font-size: 0.80em; }
+h1 > code, h2 > code, h3 > code { font-size: 0.80em; }
 .marginnote > code,
 .sidenote > code { font-size: 1rem; }
 pre > code {
@@ -246,20 +244,13 @@ label.margin-toggle:not(.sidenote-number) { display: none; }
 }
 @media (max-width: 760px) {
     body { width: 84%; padding-left: 8%; padding-right: 8%; }
-    hr,
-    section > p,
-    section > footer,
-    section > table { width: 100%; }
+    hr, section > p, section > footer, section > table { width: 100%; }
     pre > code { width: 97%; }
-    section > dl,
-    section > ol,
-    section > ul { width: 90%; }
+    section > dl, section > ol, section > ul { width: 90%; }
     figure { max-width: 90%; }
-    figcaption,
-    figure.fullwidth figcaption { margin-right: 0%; max-width: none; }
+    figcaption, figure.fullwidth figcaption { margin-right: 0%; max-width: none; }
     blockquote { margin-left: 1.5em; margin-right: 0em; }
-    blockquote p,
-    blockquote footer { width: 100%; }
+    blockquote p, blockquote footer { width: 100%; }
     label.margin-toggle:not(.sidenote-number) { display: inline; }
     .sidenote,
     .marginnote { display: none; }
