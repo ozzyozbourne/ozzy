@@ -25,10 +25,10 @@
 }
 html { font-size: 15px; }
 body {
-    width: 92%;
+    width: 87.5%;
     margin-left: auto;
     margin-right: auto;
-    /*padding-left: 3%;*/
+    padding-left: 12.5%;
     font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
     background-color: #fffff8;
     color: #111;
@@ -111,8 +111,8 @@ blockquote footer {
     font-size: 1.1rem;
     text-align: right;
 }
-section > p, section > footer, section > table { width: 70%; }
-/* 70 + 30 == 100, paragraph + sidenote = full width */
+section > p, section > footer, section > table { width: 55%; }
+/* 50 + 5 == 55, to be the same width as paragraph */
 section > dl, section > ol, section > ul {
     width: 50%;
     -webkit-padding-start: 5%;
@@ -153,8 +153,8 @@ img { max-width: 100%; }
 .sidenote, .marginnote {
     float: right;
     clear: right;
-    margin-right: -35%;
-    width: 30%;
+    margin-right: -60%;
+    width: 50%;
     margin-top: 0.3rem;
     margin-bottom: 0;
     font-size: 1.1rem;
