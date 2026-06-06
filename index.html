@@ -5,6 +5,25 @@
     <title>Tufte CSS</title>
     <link rel="stylesheet" href="tufte.css"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      /* CUDA matmul sidenote animation — 4s cycle, 4 tiled thread blocks */
+      @keyframes mm-c-tl{0%{opacity:0}6%{opacity:.85}19%{opacity:.85}25%{opacity:0}100%{opacity:0}}
+      @keyframes mm-c-tr{0%{opacity:0}25%{opacity:0}31%{opacity:.85}44%{opacity:.85}50%{opacity:0}100%{opacity:0}}
+      @keyframes mm-c-bl{0%{opacity:0}50%{opacity:0}56%{opacity:.85}69%{opacity:.85}75%{opacity:0}100%{opacity:0}}
+      @keyframes mm-c-br{0%{opacity:0}75%{opacity:0}81%{opacity:.85}94%{opacity:.85}100%{opacity:0}}
+      @keyframes mm-a-top{0%{opacity:0}6%{opacity:.45}44%{opacity:.45}50%{opacity:0}100%{opacity:0}}
+      @keyframes mm-a-bot{0%{opacity:0}50%{opacity:0}56%{opacity:.45}94%{opacity:.45}100%{opacity:0}}
+      @keyframes mm-b-l{0%{opacity:0}6%{opacity:.45}19%{opacity:.45}25%{opacity:0}50%{opacity:0}56%{opacity:.45}69%{opacity:.45}75%{opacity:0}100%{opacity:0}}
+      @keyframes mm-b-r{0%{opacity:0}25%{opacity:0}31%{opacity:.45}44%{opacity:.45}50%{opacity:0}75%{opacity:0}81%{opacity:.45}94%{opacity:.45}100%{opacity:0}}
+      .mm-cTL{animation:mm-c-tl 4s linear infinite}
+      .mm-cTR{animation:mm-c-tr 4s linear infinite}
+      .mm-cBL{animation:mm-c-bl 4s linear infinite}
+      .mm-cBR{animation:mm-c-br 4s linear infinite}
+      .mm-aTop{animation:mm-a-top 4s linear infinite}
+      .mm-aBot{animation:mm-a-bot 4s linear infinite}
+      .mm-bL{animation:mm-b-l 4s linear infinite}
+      .mm-bR{animation:mm-b-r 4s linear infinite}
+    </style>
   </head>
 
   <body>
@@ -150,9 +169,79 @@
       </section>
 
       <section>
+        <h2 id="animated-sidenotes">Animated Margin Notes</h2>
+        <p>Sidenotes can hold more than text. An inline SVG with CSS <code>@keyframes</code> stays crisp at any resolution, inherits <code>currentColor</code> so it adapts to dark mode automatically, and requires no external files or JavaScript — ideal for algorithm diagrams alongside prose.</p>
+        <p>The margin note here animates a tiled CUDA matrix multiplication.<label for="mn-cuda-matmul" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-cuda-matmul" class="margin-toggle"/><span class="marginnote"><svg viewBox="0 0 144 64" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin-bottom:.5rem" role="img" aria-label="Animated CUDA tiled matrix multiplication">
+          <!-- A highlights: amber, rows 0-1 then rows 2-3 -->
+          <rect class="mm-aTop" fill="#d97706" opacity="0" x="4" y="16" width="40" height="20"/>
+          <rect class="mm-aBot" fill="#d97706" opacity="0" x="4" y="36" width="40" height="20"/>
+          <!-- B highlights: blue, cols 0-1 then cols 2-3 -->
+          <rect class="mm-bL" fill="#3b82f6" opacity="0" x="52" y="16" width="20" height="40"/>
+          <rect class="mm-bR" fill="#3b82f6" opacity="0" x="72" y="16" width="20" height="40"/>
+          <!-- C output tiles: green -->
+          <rect class="mm-cTL" fill="#16a34a" opacity="0" x="100" y="16" width="20" height="20"/>
+          <rect class="mm-cTR" fill="#16a34a" opacity="0" x="120" y="16" width="20" height="20"/>
+          <rect class="mm-cBL" fill="#16a34a" opacity="0" x="100" y="36" width="20" height="20"/>
+          <rect class="mm-cBR" fill="#16a34a" opacity="0" x="120" y="36" width="20" height="20"/>
+          <!-- Grid lines on top of highlights -->
+          <g stroke="currentColor" stroke-opacity=".3" stroke-width=".6" fill="none">
+            <rect x="4" y="16" width="40" height="40"/>
+            <line x1="14" y1="16" x2="14" y2="56"/><line x1="24" y1="16" x2="24" y2="56"/><line x1="34" y1="16" x2="34" y2="56"/>
+            <line x1="4" y1="26" x2="44" y2="26"/><line x1="4" y1="36" x2="44" y2="36"/><line x1="4" y1="46" x2="44" y2="46"/>
+            <rect x="52" y="16" width="40" height="40"/>
+            <line x1="62" y1="16" x2="62" y2="56"/><line x1="72" y1="16" x2="72" y2="56"/><line x1="82" y1="16" x2="82" y2="56"/>
+            <line x1="52" y1="26" x2="92" y2="26"/><line x1="52" y1="36" x2="92" y2="36"/><line x1="52" y1="46" x2="92" y2="46"/>
+            <rect x="100" y="16" width="40" height="40"/>
+            <line x1="110" y1="16" x2="110" y2="56"/><line x1="120" y1="16" x2="120" y2="56"/><line x1="130" y1="16" x2="130" y2="56"/>
+            <line x1="100" y1="26" x2="140" y2="26"/><line x1="100" y1="36" x2="140" y2="36"/><line x1="100" y1="46" x2="140" y2="46"/>
+          </g>
+          <!-- Matrix and operator labels -->
+          <text x="24" y="11" text-anchor="middle" font-size="9" font-style="italic" fill="currentColor" font-family="et-book,Georgia,serif">A</text>
+          <text x="72" y="11" text-anchor="middle" font-size="9" font-style="italic" fill="currentColor" font-family="et-book,Georgia,serif">B</text>
+          <text x="120" y="11" text-anchor="middle" font-size="9" font-style="italic" fill="currentColor" font-family="et-book,Georgia,serif">C</text>
+          <text x="48" y="38" text-anchor="middle" font-size="9" fill="currentColor" opacity=".45">&#215;</text>
+          <text x="96" y="38" text-anchor="middle" font-size="9" fill="currentColor" opacity=".45">=</text>
+        </svg>Tiled CUDA <em>matmul</em>: each of the four thread blocks computes a 2&#215;2 output tile of <em>C</em> (green) by loading rows of <em>A</em> (amber) and columns of <em>B</em> (blue) into shared memory. On hardware, all four blocks run concurrently.</span> Each of four CUDA thread blocks claims a 2&#215;2 output tile, loading the corresponding rows of <em>A</em> and columns of <em>B</em> into shared memory before computing the dot products. The sequential view here shows which data each block touches; on real hardware all four blocks run in parallel, which is exactly why tiling reduces redundant global-memory traffic.</p>
+        <p>Canvas 2D swaps SVG's declarative model for an explicit JavaScript loop — every frame you clear the canvas, update state, and redraw from scratch.<label for="mn-canvas-bounce" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-canvas-bounce" class="margin-toggle"/><span class="marginnote"><canvas id="canvas-bounce" width="140" height="80" style="width:100%;display:block;margin-bottom:.5rem"></canvas>Immediate-mode Canvas 2D: three dots bounce freely inside a box. Each frame calls <code>clearRect</code>, moves every dot, and redraws — no retained scene graph, just pixels overwritten sixty times a second.</span> This makes Canvas 2D natural for physics and particle systems where every object's position changes each frame regardless. The trade-off is that nothing is preserved between frames — if you stop calling <code>requestAnimationFrame</code>, the canvas simply freezes on its last painted state.</p>
+      </section>
+
+      <section>
         <h2 id="epilogue">Epilogue</h2>
         <p>Many thanks go to Edward Tufte for leading the way with his work. It is only through his kind and careful editing that this project accomplishes what it does. All errors of implementation are of course mine.</p>
       </section>
     </article>
+  <script>
+    (function () {
+      var canvas = document.getElementById('canvas-bounce');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var W = canvas.width, H = canvas.height;
+      var balls = [
+        { x: 35,  y: 20, vx:  1.1, vy:  0.75, r: 5, color: '#d97706' },
+        { x: 70,  y: 55, vx: -0.85, vy:  1.0,  r: 5, color: '#3b82f6' },
+        { x: 110, y: 30, vx:  0.65, vy: -0.9,  r: 5, color: '#16a34a' },
+      ];
+      function frame() {
+        ctx.clearRect(0, 0, W, H);
+        ctx.strokeStyle = 'rgba(128,128,128,0.25)';
+        ctx.lineWidth = 0.6;
+        ctx.strokeRect(0.3, 0.3, W - 0.6, H - 0.6);
+        balls.forEach(function (b) {
+          b.x += b.vx;
+          b.y += b.vy;
+          if (b.x - b.r < 0)  { b.x = b.r;     b.vx =  Math.abs(b.vx); }
+          if (b.x + b.r > W)  { b.x = W - b.r; b.vx = -Math.abs(b.vx); }
+          if (b.y - b.r < 0)  { b.y = b.r;     b.vy =  Math.abs(b.vy); }
+          if (b.y + b.r > H)  { b.y = H - b.r; b.vy = -Math.abs(b.vy); }
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+          ctx.fillStyle = b.color;
+          ctx.fill();
+        });
+        requestAnimationFrame(frame);
+      }
+      frame();
+    })();
+  </script>
   </body>
 </html>
