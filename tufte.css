@@ -150,8 +150,7 @@ a:visited {
 }
 /* Sidenotes, margin notes, figures, captions */
 img { max-width: 100%; }
-.sidenote,
-.marginnote {
+.sidenote, .marginnote {
     float: right;
     clear: right;
     margin-right: -35%;
@@ -254,8 +253,7 @@ label.margin-toggle:not(.sidenote-number) { display: none; }
     label.margin-toggle:not(.sidenote-number) { display: inline; }
     .sidenote,
     .marginnote { display: none; }
-    .margin-toggle:checked + .sidenote,
-    .margin-toggle:checked + .marginnote {
+    .margin-toggle:checked + .sidenote, .margin-toggle:checked + .marginnote {
         display: block;
         float: left;
         left: 1rem;
