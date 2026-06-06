@@ -202,7 +202,16 @@
           <text x="48" y="38" text-anchor="middle" font-size="9" fill="currentColor" opacity=".45">&#215;</text>
           <text x="96" y="38" text-anchor="middle" font-size="9" fill="currentColor" opacity=".45">=</text>
         </svg>Tiled CUDA <em>matmul</em>: each of the four thread blocks computes a 2&#215;2 output tile of <em>C</em> (green) by loading rows of <em>A</em> (amber) and columns of <em>B</em> (blue) into shared memory. On hardware, all four blocks run concurrently.</span> Each of four CUDA thread blocks claims a 2&#215;2 output tile, loading the corresponding rows of <em>A</em> and columns of <em>B</em> into shared memory before computing the dot products. The sequential view here shows which data each block touches; on real hardware all four blocks run in parallel, which is exactly why tiling reduces redundant global-memory traffic.</p>
+      </section>
+
+      <section>
+        <h2 id="animated-canvas-sidenote">Animated Canvas 2D Sidenote</h2>
         <p>Canvas 2D swaps SVG's declarative model for an explicit JavaScript loop — every frame you clear the canvas, update state, and redraw from scratch.<label for="mn-canvas-bounce" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-canvas-bounce" class="margin-toggle"/><span class="marginnote"><canvas id="canvas-bounce" width="140" height="80" style="width:100%;display:block;margin-bottom:.5rem"></canvas>Immediate-mode Canvas 2D: three dots bounce freely inside a box. Each frame calls <code>clearRect</code>, moves every dot, and redraws — no retained scene graph, just pixels overwritten sixty times a second.</span> This makes Canvas 2D natural for physics and particle systems where every object's position changes each frame regardless. The trade-off is that nothing is preserved between frames — if you stop calling <code>requestAnimationFrame</code>, the canvas simply freezes on its last painted state.</p>
+      </section>
+
+      <section>
+        <h2 id="animated-webgpu">Animated WebGPU</h2>
+        <p>WebGPU exposes the full modern GPU pipeline in the browser. A compute shader performs the matrix multiplication tile by tile, writing results into a shared storage buffer; the vertex shader reads that same buffer to position a quad for every matrix cell; the fragment shader reads it again to colour cells amber (<em>A</em> rows), blue (<em>B</em> columns), or green (<em>C</em> tiles). All three stages run within a single command encoder — the GPU guarantees compute output is visible to the render pass that follows.<label for="mn-webgpu" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-webgpu" class="margin-toggle"/><span class="marginnote"><canvas id="canvas-webgpu" width="220" height="90" style="width:100%;display:block;margin-bottom:0.3rem"></canvas><span id="webgpu-fallback" style="display:none;font-size:1rem;color:#888">WebGPU is not available in this browser.</span>Tiled 4&#215;4 matmul on the GPU. Each step the compute shader fills one 2&#215;2 tile of <em>C</em> (green); vertex and fragment shaders read the same storage buffer to render the grid. Amber rows of <em>A</em> and blue columns of <em>B</em> show the data each tile reads; fragment opacity reflects actual computed values.</span> Unlike SVG keyframes or Canvas 2D, no CPU draws anything — the GPU computes and visualises simultaneously, all three shader stages sharing one buffer inside a single command encoder submission.</p>
       </section>
 
       <section>
@@ -241,6 +250,190 @@
         requestAnimationFrame(frame);
       }
       frame();
+    })();
+  </script>
+  <script>
+    (async function gpuDemo() {
+      var canvas   = document.getElementById('canvas-webgpu');
+      var fallback = document.getElementById('webgpu-fallback');
+      if (!canvas) return;
+      function bail() { canvas.style.display = 'none'; if (fallback) fallback.style.display = ''; }
+      if (!navigator.gpu) { bail(); return; }
+      var adapter, device;
+      try {
+        adapter = await navigator.gpu.requestAdapter();
+        if (!adapter) throw 0;
+        device  = await adapter.requestDevice();
+      } catch (_) { bail(); return; }
+
+      var gpuCtx = canvas.getContext('webgpu');
+      var fmt    = navigator.gpu.getPreferredCanvasFormat();
+      gpuCtx.configure({ device: device, format: fmt, alphaMode: 'opaque' });
+
+      // Storage buffer: A[0-15] | B[16-31] | C[32-47]  (48 x f32 = 192 bytes)
+      var matBuf = device.createBuffer({
+        size: 192, usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+      });
+      device.queue.writeBuffer(matBuf,  0, new Float32Array([2,1,0,1, 1,3,1,0, 0,1,2,1, 1,0,1,3])); // A
+      device.queue.writeBuffer(matBuf, 64, new Float32Array([1,2,1,0, 2,1,0,1, 1,0,2,1, 0,1,1,2])); // B
+
+      // Uniform buffer: step (u32) padded to 16 bytes
+      var stepBuf = device.createBuffer({
+        size: 16, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+      });
+
+      // ── Compute shader ────────────────────────────────────────────────────────
+      var cSrc = [
+        'struct P { step: u32, _a: u32, _b: u32, _c: u32 }',
+        '@group(0) @binding(0) var<storage, read_write> m: array<f32, 48>;',
+        '@group(0) @binding(1) var<uniform> p: P;',
+        '@compute @workgroup_size(2, 2)',
+        'fn main(@builtin(global_invocation_id) g: vec3u) {',
+        '  let s   = p.step;',
+        '  let row = (s / 2u) * 2u + g.y;',
+        '  let col = (s % 2u) * 2u + g.x;',
+        '  var sum = 0.0;',
+        '  for (var k = 0u; k < 4u; k++) {',
+        '    sum += m[row * 4u + k] * m[16u + k * 4u + col];',
+        '  }',
+        '  m[32u + row * 4u + col] = sum;',
+        '}',
+      ].join('\n');
+
+      var cBGL = device.createBindGroupLayout({ entries: [
+        { binding: 0, visibility: GPUShaderStage.COMPUTE, buffer: { type: 'storage' } },
+        { binding: 1, visibility: GPUShaderStage.COMPUTE, buffer: { type: 'uniform' } },
+      ]});
+      var cPL = device.createComputePipeline({
+        layout:  device.createPipelineLayout({ bindGroupLayouts: [cBGL] }),
+        compute: { module: device.createShaderModule({ code: cSrc }), entryPoint: 'main' },
+      });
+      var cBG = device.createBindGroup({ layout: cBGL, entries: [
+        { binding: 0, resource: { buffer: matBuf  } },
+        { binding: 1, resource: { buffer: stepBuf } },
+      ]});
+
+      // ── Render shaders ───────────────────────────────────────────────────────
+      // Canvas 220x90px → NDC helper: x/110-1, 1-y/45
+      // A cells: ox=5, B: ox=73, C: ox=141; cell=12px, pitch=14px, matrix top y=20
+      var rSrc = [
+        'struct P { step: u32, _a: u32, _b: u32, _c: u32 }',
+        '@group(0) @binding(0) var<storage, read> m: array<f32, 48>;',
+        '@group(0) @binding(1) var<uniform> p: P;',
+        'struct Vert {',
+        '  @builtin(position)              pos: vec4f,',
+        '  @location(0) @interpolate(flat) idx: u32,',
+        '}',
+        'fn nd(x: f32, y: f32) -> vec2f {',
+        '  return vec2f(x / 110.0 - 1.0, 1.0 - y / 45.0);',
+        '}',
+        '@vertex',
+        'fn vs(@builtin(vertex_index) vi: u32, @builtin(instance_index) ii: u32) -> Vert {',
+        '  let mat = ii / 16u;',
+        '  let c   = ii % 16u;',
+        '  let row = c / 4u;',
+        '  let col = c % 4u;',
+        '  var ox  = array<f32, 3>(5.0, 73.0, 141.0);',
+        '  let x0  = ox[mat] + f32(col) * 14.0;',
+        '  let y0  = 20.0    + f32(row) * 14.0;',
+        '  var pts = array<vec2f, 4>(',
+        '    nd(x0, y0), nd(x0 + 12.0, y0), nd(x0, y0 + 12.0), nd(x0 + 12.0, y0 + 12.0)',
+        '  );',
+        '  var qi = array<u32, 6>(0u, 1u, 2u, 1u, 3u, 2u);',
+        '  let q  = qi[vi % 6u];',
+        '  return Vert(vec4f(pts[q], 0.0, 1.0), ii);',
+        '}',
+        '@fragment',
+        'fn fs(v: Vert) -> @location(0) vec4f {',
+        '  let mat  = v.idx / 16u;',
+        '  let c    = v.idx % 16u;',
+        '  let row  = c / 4u;',
+        '  let col  = c % 4u;',
+        '  let s    = p.step;',
+        '  let ar   = (s / 2u) * 2u;',
+        '  let ac   = (s % 2u) * 2u;',
+        '  let ir   = row >= ar && row < ar + 2u;',
+        '  let ic   = col >= ac && col < ac + 2u;',
+        '  let cs   = (row / 2u) * 2u + (col / 2u);',
+        '  let done = cs < s;',
+        '  if (mat == 0u) {',
+        '    let a = clamp(m[c] / 3.0, 0.2, 1.0);',
+        '    if (ir) { return vec4f(0.851, 0.467, 0.024, 0.35 + a * 0.40); }',
+        '    return    vec4f(0.851, 0.467, 0.024, a * 0.15);',
+        '  } else if (mat == 1u) {',
+        '    let b = clamp(m[16u + c] / 2.0, 0.2, 1.0);',
+        '    if (ic) { return vec4f(0.231, 0.510, 0.965, 0.35 + b * 0.40); }',
+        '    return    vec4f(0.231, 0.510, 0.965, b * 0.15);',
+        '  } else {',
+        '    if (ir && ic) { return vec4f(0.086, 0.639, 0.290, 0.85); }',
+        '    if (done) {',
+        '      let cv = clamp(m[32u + c] / 8.0, 0.0, 1.0);',
+        '      return vec4f(0.086, 0.639, 0.290, 0.20 + cv * 0.35);',
+        '    }',
+        '    return vec4f(0.45, 0.45, 0.45, 0.12);',
+        '  }',
+        '}',
+      ].join('\n');
+
+      var rBGL = device.createBindGroupLayout({ entries: [
+        { binding: 0, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: { type: 'read-only-storage' } },
+        { binding: 1, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: { type: 'uniform' } },
+      ]});
+      var rMod = device.createShaderModule({ code: rSrc });
+      var rPL  = device.createRenderPipeline({
+        layout:   device.createPipelineLayout({ bindGroupLayouts: [rBGL] }),
+        vertex:   { module: rMod, entryPoint: 'vs' },
+        fragment: {
+          module: rMod, entryPoint: 'fs',
+          targets: [{ format: fmt, blend: {
+            color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+            alpha: { srcFactor: 'one',       dstFactor: 'one-minus-src-alpha', operation: 'add' },
+          }}],
+        },
+        primitive: { topology: 'triangle-list' },
+      });
+      var rBG = device.createBindGroup({ layout: rBGL, entries: [
+        { binding: 0, resource: { buffer: matBuf  } },
+        { binding: 1, resource: { buffer: stepBuf } },
+      ]});
+
+      var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var bg   = dark ? { r: 0.082, g: 0.082, b: 0.082, a: 1 }
+                      : { r: 1.0,   g: 1.0,   b: 0.973, a: 1 };
+
+      // ── Render loop ──────────────────────────────────────────────────────────
+      var frame = 0;
+      (function tick() {
+        var step = Math.floor(frame / 90) % 4;
+        device.queue.writeBuffer(stepBuf, 0, new Uint32Array([step, 0, 0, 0]));
+
+        var enc = device.createCommandEncoder();
+
+        // 1. Compute pass — write current 2x2 tile of C into matBuf
+        var cp = enc.beginComputePass();
+        cp.setPipeline(cPL);
+        cp.setBindGroup(0, cBG);
+        cp.dispatchWorkgroups(1); // 1 workgroup of 2x2 threads = 4 output cells
+        cp.end();
+
+        // 2. Render pass — vertex + fragment read from the same matBuf
+        var rp = enc.beginRenderPass({
+          colorAttachments: [{
+            view:       gpuCtx.getCurrentTexture().createView(),
+            clearValue: bg,
+            loadOp:    'clear',
+            storeOp:   'store',
+          }],
+        });
+        rp.setPipeline(rPL);
+        rp.setBindGroup(0, rBG);
+        rp.draw(6, 48); // 6 vertices x 48 instances (3 matrices x 16 cells)
+        rp.end();
+
+        device.queue.submit([enc.finish()]);
+        frame++;
+        requestAnimationFrame(tick);
+      })();
     })();
   </script>
   </body>
