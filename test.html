@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Tufte CSS</title>
+    <link rel="stylesheet" href="tufte.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      /* CUDA matmul sidenote animation — 4s cycle, 4 tiled thread blocks */
+      @keyframes mm-c-tl{0%{opacity:0}6%{opacity:.85}19%{opacity:.85}25%{opacity:0}100%{opacity:0}}
+      @keyframes mm-c-tr{0%{opacity:0}25%{opacity:0}31%{opacity:.85}44%{opacity:.85}50%{opacity:0}100%{opacity:0}}
+      @keyframes mm-c-bl{0%{opacity:0}50%{opacity:0}56%{opacity:.85}69%{opacity:.85}75%{opacity:0}100%{opacity:0}}
+      @keyframes mm-c-br{0%{opacity:0}75%{opacity:0}81%{opacity:.85}94%{opacity:.85}100%{opacity:0}}
+      @keyframes mm-a-top{0%{opacity:0}6%{opacity:.45}44%{opacity:.45}50%{opacity:0}100%{opacity:0}}
+      @keyframes mm-a-bot{0%{opacity:0}50%{opacity:0}56%{opacity:.45}94%{opacity:.45}100%{opacity:0}}
+      @keyframes mm-b-l{0%{opacity:0}6%{opacity:.45}19%{opacity:.45}25%{opacity:0}50%{opacity:0}56%{opacity:.45}69%{opacity:.45}75%{opacity:0}100%{opacity:0}}
+      @keyframes mm-b-r{0%{opacity:0}25%{opacity:0}31%{opacity:.45}44%{opacity:.45}50%{opacity:0}75%{opacity:0}81%{opacity:.45}94%{opacity:.45}100%{opacity:0}}
+      .mm-cTL{animation:mm-c-tl 4s linear infinite}
+      .mm-cTR{animation:mm-c-tr 4s linear infinite}
+      .mm-cBL{animation:mm-c-bl 4s linear infinite}
+      .mm-cBR{animation:mm-c-br 4s linear infinite}
+      .mm-aTop{animation:mm-a-top 4s linear infinite}
+      .mm-aBot{animation:mm-a-bot 4s linear infinite}
+      .mm-bL{animation:mm-b-l 4s linear infinite}
+      .mm-bR{animation:mm-b-r 4s linear infinite}
+    </style>
+  </head>
+
+  <body>
+    <article>
+      <h1 id="tufte-css">Tufte CSS</h1>
+      <p class="subtitle">Dave Liepmann</p>
+      <section>
+        <p>Tufte CSS provides tools to style web articles using the ideas demonstrated by Edward Tufte’s books and handouts. Tufte’s style is known for its simplicity, extensive use of sidenotes, tight integration of graphics with text, and carefully chosen typography.</p>
+        <p>Tufte CSS was created by <a href="http://www.daveliepmann.com">Dave Liepmann</a> and is now an Edward Tufte project. The original idea was cribbed from <a href="https://tufte-latex.github.io/tufte-latex/">Tufte-LaTeX</a> and <a href="http://rmarkdown.rstudio.com/tufte_handout_format.html">R Markdown’s Tufte Handout format</a>. We give hearty thanks to all the people who have contributed to those projects.</p>
+        <p>If you see anything that Tufte CSS could improve, we welcome your contribution in the form of an issue or pull request on the GitHub project: <a href="https://github.com/edwardtufte/tufte-css">tufte-css</a>. Please note the <a href="https://github.com/edwardtufte/tufte-css#contributing">contribution guidelines</a>.</p>
+        <p>Finally, a reminder about the goal of this project. The web is not print. Webpages are not books. Therefore, the goal of Tufte CSS is not to say “websites should look like this interpretation of Tufte’s books” but rather “here are some techniques Tufte developed that we’ve found useful in print; maybe you can find a way to make them useful on the web”. Tufte CSS is merely a sketch of one way to implement this particular set of ideas. It should be a starting point, not a design goal, because any project should present their information as best suits their particular circumstances.</p>
+      </section>
+
+      <section>
+        <h2 id="getting-started">Getting Started</h2>
+        <p>To use Tufte CSS, copy <code>tufte.css</code> and the <code>et-book</code> directory of font files to your project directory, then add the following to your HTML document’s <code>head</code> block:</p>
+
+        <pre><code>&lt;link rel="stylesheet" href="tufte.css"/&gt;</code></pre>
+
+        <p>Now you just have to use the provided CSS rules, and the Tufte CSS conventions described in this document. For best results, View Source and Inspect Element frequently.</p>
+      </section>
+
+      <section>
+        <h2 id="fundamentals">Fundamentals</h2>
+        <h3 id="fundamentals--sections-and-headers">Sections and Headings</h3>
+        <p>Organize your document with an <code>article</code> element inside your <code>body</code> tag. Inside that, use <code>section</code> tags around each logical grouping of text and headings.</p>
+        <p>Tufte CSS uses <code>h1</code> for the document title, <code>p</code> with class <code>subtitle</code> for the document subtitle, <code>h2</code> for section headings, and <code>h3</code> for low-level headings. More specific headings are not supported. If you feel the urge to reach for a heading of level 4 or greater, consider redesigning your document:</p>
+        <blockquote cite="http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0000hB">
+          <p>[It is] notable that the Feynman lectures (3 volumes) write about all of physics in 1800 pages, using only 2 levels of hierarchical headings: chapters and A-level heads in the text. It also uses the methodology of <em>sentences</em> which then cumulate sequentially into <em>paragraphs</em>, rather than the grunts of bullet points. Undergraduate Caltech physics is very complicated material, but it didn’t require an elaborate hierarchy to organize.</p>
+          <footer><a href="http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0000hB">Edward Tufte, forum post, ‘Book design: advice and examples’ thread</a></footer>
+        </blockquote>
+        <p>As a bonus, this excerpt regarding the use of headings provides an example of block quotes. In Tufte CSS they are just lightly styled, semantically correct HTML using <code>blockquote</code> and <code>footer</code> elements. See page 20 of <a href="https://www.edwardtufte.com/tufte/books_vdqi">The Visual Display of Quantitative Information</a> for an example in print.</p>
+        <p><span class="newthought">In his later books<label for="sn-in-his-later-books" class="margin-toggle sidenote-number"></label></span><input type="checkbox" id="sn-in-his-later-books" class="margin-toggle"/><span class="sidenote"><a href="http://www.edwardtufte.com/tufte/books_be"><em>Beautiful Evidence</em></a></span>, Tufte starts each section with a bit of vertical space, a non-indented paragraph, and the first few words of the sentence set in small caps. For this we use a span with the class <code>newthought</code>, as demonstrated at the beginning of this paragraph. Vertical spacing is accomplished separately through <code>&lt;section&gt;</code> tags. Be consistent: though we do so in this paragraph for the purpose of demonstration, do not alternate use of header elements and the <code>newthought</code> technique. Pick one approach and stick to it.</p>
+
+        <h3 id="fundamentals--text">Text</h3>
+        <p>Although paper handouts obviously have a pure white background, the web is better served by the use of slightly off-white and off-black colors. Tufte CSS uses <code>#fffff8</code> and <code>#111111</code> because they are nearly indistinguishable from their ‘pure’ cousins, but dial down the harsh contrast. We stick to the greyscale for text, reserving color for specific, careful use in figures and images.</p>
+        <p>In print, Tufte has used the proprietary Monotype Bembo<label for="sn-proprietary-monotype-bembo" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-proprietary-monotype-bembo" class="margin-toggle"/><span class="sidenote">See Tufte’s comment in the <a href="http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0000Vt">Tufte book fonts</a> thread.</span> font. A similar effect is achieved in digital formats with the now open-source <a href="https://github.com/edwardtufte/et-book">ETBook</a>, which Tufte CSS supplies with a <code>@font-face</code> reference to a .ttf file. In case ETBook somehow doesn’t work, Tufte CSS shifts gracefully to other serif fonts like Palatino and Georgia.</p>
+        <p>Also notice how Tufte CSS includes separate font files for bold (strong) and italic (emphasis), instead of relying on the browser to mechanically transform the text. This is typographic best practice.</p>
+        <p class="sans">If you prefer sans-serifs, use the <code>sans</code> class. It relies on Gill Sans, Tufte’s sans-serif font of choice.</p>
+        <p>Links in Tufte CSS match the body text in color and do not change on mouseover or when clicked. Here is a <a href="#">dummy example</a> that goes nowhere. These links are underlined, since this is the most widely recognized indicator of clickable text. <label for="mn-blue-links" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-blue-links" class="margin-toggle"/><span class="marginnote">Blue text, while also a widely recognizable clickable-text indicator, is crass and distracting. Luckily, it is also rendered unnecessary by the use of underlining.</span>
+        <p>As always, these design choices are merely one approach that Tufte CSS provides by default. Other approaches can also be made to work. The goal is to make sentences readable without interference from links, as well as to make links immediately identifiable even by casual web users.</p>
+      </section>
+
+      <section>
+        <h2 id="epigraphs">Epigraphs</h2>
+        <div class="epigraph">
+          <blockquote>
+            <p>The English language . . . becomes ugly and inaccurate because our thoughts are foolish, but the slovenliness of our language makes it easier for us to have foolish thoughts.</p>
+            <footer>George Orwell, “Politics and the English Language”</footer>
+          </blockquote>
+          <blockquote>
+            <p>For a successful technology, reality must take precedence over public relations, for Nature cannot be fooled.</p>
+            <footer>Richard P. Feynman, <cite>“What Do You Care What Other People Think?”</cite></footer>
+          </blockquote>
+          <blockquote>I do not paint things, I paint only the differences between things.<footer>Henri Matisse, <cite>Henri Matisse Dessins: thèmes et variations</cite> (Paris, 1943), 37</footer></blockquote>
+        </div>
+        <p>If you’d like to introduce your page or a section of your page with some quotes, use epigraphs. Modeled after chapter epigraphs in Tufte’s books (particularly <em>Beautiful Evidence</em>), these are <code>blockquote</code> elements with a bit of specialized styling. Quoted text is italicized. The source goes in a <code>footer</code> element inside the <code>blockquote</code>. We have provided three examples in the epigraph of this section, demonstrating shorter and longer quotes, with and without a paragraph tag, and showing how multiple quotes within an epigraph fit together with the use of a wrapper class.</p>
+      </section>
+
+      <section>
+        <h2 id="sidenotes">Sidenotes: Footnotes and Marginal Notes</h2>
+        <p>One of the most distinctive features of Tufte’s style is his extensive use of sidenotes.<label for="sn-extensive-use-of-sidenotes" class="margin-toggle sidenote-number"></label><input type="checkbox" id="sn-extensive-use-of-sidenotes" class="margin-toggle"/><span class="sidenote">This is a sidenote.</span> Sidenotes are like footnotes, except they don’t force the reader to jump their eye to the bottom of the page, but instead display off to the side in the margin. Perhaps you have noticed their use in this document already. You are very astute.</p>
+        <p>Sidenotes are a great example of the web not being like print. On sufficiently large viewports, Tufte CSS uses the margin for sidenotes, margin notes, and small figures. On smaller viewports, elements that would go in the margin are hidden until the user toggles them into view. The goal is to present related but not necessary information such as asides or citations <em>as close as possible</em> to the text that references them. At the same time, this secondary information should stay out of the way of the eye, not interfering with the progression of ideas in the main text.</p>
+        <p>Sidenotes consist of two elements: a superscript reference number that goes inline with the text, and a sidenote with content. To add the former, just put a label and dummy checkbox into the text where you want the reference to go, like so:</p>
+        <pre><code>&lt;label for="sn-demo"
+       class="margin-toggle sidenote-number"&gt;
+&lt;/label&gt;
+&lt;input type="checkbox"
+       id="sn-demo"
+       class="margin-toggle"/&gt;</code></pre>
+        <p>You must manually assign a reference <code>id</code> to each side or margin note, replacing “sn-demo” in the <code>for</code> and the <code>id</code> attribute values with an appropriate descriptor. It is useful to use prefixes like <code>sn-</code> for sidenotes and <code>mn-</code> for margin notes.</p>
+        <p>Immediately adjacent to that sidenote reference in the main text goes the sidenote content itself, in a <code>span</code> with class <code>sidenote</code>. This tag is also inserted directly in the middle of the body text, but is either pushed into the margin or hidden by default. Make sure to position your sidenotes correctly by keeping the sidenote-number label close to the sidenote itself.</p>
+        <p>For optimal readibility of sidenotes, enclose the main text in the <code>section</code> tag.</p>
+        <p>If you want a sidenote without footnote-style numberings, then you want a margin note.
+          <label for="mn-demo" class="margin-toggle">&#8853;</label>
+          <input type="checkbox" id="mn-demo" class="margin-toggle"/>
+          <span class="marginnote">
+            This is a margin note. Notice there isn’t a number preceding the note.
+          </span> On large screens, a margin note is just a sidenote that omits the reference number. This lessens the distracting effect taking away from the flow of the main text, but can increase the cognitive load of matching a margin note to its referent text. However, on small screens, a margin note is like a sidenote except its viewability-toggle is a symbol rather than a reference number. This document currently uses the symbol &#8853; (<code>&amp;#8853;</code>), but it’s up to you.</p>
+        <p>Margin notes are created just like sidenotes, but with the <code>marginnote</code> class for the content and the <code>margin-toggle</code> class for the label and dummy checkbox. For instance, here is the code for the margin note used in the previous paragraph:</p>
+        <pre><code>&lt;label for="mn-demo" class="margin-toggle"&gt;&amp;#8853;&lt;/label&gt;
+&lt;input type="checkbox" id="mn-demo" class="margin-toggle"/&gt;
+&lt;span class="marginnote"&gt;
+  This is a margin note. Notice there isn’t a number preceding the note.
+&lt;/span&gt;</code></pre>
+        <p>Figures in the margin are created as margin notes, as demonstrated in the next section.</p>
+      </section>
+
+      <section>
+        <h2 id="figures">Figures</h2>
+        <p>Tufte emphasizes tight integration of graphics with text. Data, graphs, and figures are kept with the text that discusses them. In print, this means they are not relegated to a separate page. On the web, that means readability of graphics and their accompanying text without extra clicks, tab-switching, or scrolling.</p>
+        <p>Figures should try to use the <code>figure</code> element, which by default are constrained to the main column. Don’t wrap figures in a paragraph tag. Any label or margin note goes in a regular margin note inside the figure. For example, most of the time one should introduce a figure directly into the main flow of discussion, like so:</p>
+        <figure>
+          <label for="mn-exports-imports" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-exports-imports" class="margin-toggle"/><span class="marginnote">From Edward Tufte, <em>Visual Display of Quantitative Information</em>, page 92.</span>
+          <img src="assets/img/exports-imports.png" alt="Exports and Imports to and from Denmark & Norway from 1700 to 1780" />
+        </figure>
+
+        <p><label for="mn-figure-1" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-figure-1" class="margin-toggle"/><span class="marginnote"><img src="assets/img/rhino.png" alt="Image of a Rhinoceros"/>F.J. Cole, “The History of Albrecht Dürer’s Rhinoceros in Zooological Literature,” <em>Science, Medicine, and History: Essays on the Evolution of Scientific Thought and Medical Practice</em> (London, 1953), ed. E. Ashworth Underwood, 337-356. From page 71 of Edward Tufte’s <em>Visual Explanations</em>.</span> But tight integration of graphics with text is central to Tufte’s work even when those graphics are ancillary to the main body of a text. In many of those cases, a margin figure may be most appropriate. To place figures in the margin, just wrap an image (or whatever) in a margin note inside a <code>p</code> tag, as seen to the right of this paragraph.</p>
+        <p>If you need a full-width figure, give it the <code>fullwidth</code> class. Make sure that’s inside an <code>article</code>, and it will take up (almost) the full width of the screen. This approach is demonstrated below using Edward Tufte’s English translation of the Napoleon’s March data visualization. From <em>Beautiful Evidence</em>, page 122-124.</p>
+        <figure class="fullwidth">
+          <img src="assets/img/napoleons-march.png" alt="Figurative map of the successive losses of the French Army in the Russian campaign, 1812-1813" />
+        </figure>
+        <p>One obstacle to creating elegant figures on the web is the difficulty of handling different screen sizes, especially on the fly. Embedded <code>iframe</code> elements are particularly troublesome. For these instances we provide a helper class, <code>iframe-wrapper</code>, the most common use for which is probably YouTube videos, e.g.</p>
+        <pre><code>&lt;figure class="iframe-wrapper"&gt;
+  &lt;iframe width="853" height="480" src="https://www.youtube.com/embed/YslQ2625TR4" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;
+&lt;/figure&gt;</code></pre>
+        <figure class="iframe-wrapper">
+          <iframe width="853" height="480" src="https://www.youtube.com/embed/YslQ2625TR4" frameborder="0" allowfullscreen></iframe>
+        </figure>
+        <p>You can use this class on a <code>div</code> instead of a <code>figure</code>, with slightly different results but the same general effect. Experiment and choose depending on your application.</p>
+      </section>
+
+      <section>
+        <h2 id="code">Code</h2>
+        <p>Technical jargon, programming language terms, and code samples are denoted with the <code>code</code> class, as I’ve been using in this document to denote HTML. Code needs to be monospace for formatting purposes and to aid in code analysis, but it must maintain its readability. To those ends, Tufte CSS follows GitHub’s font selection, which shifts gracefully along the monospace spectrum from the elegant but rare Consolas all the way to good old reliable Courier.</p>
+        <p>Extended code examples should live in a <code>code</code> element within a <code>pre</code> element. This adds control over indentation and overflow as well:</p>
+        <pre><code>;; Some code examples in Clojure. This is a comment.
+
+;; applying a function to every item in the collection
+(map tufte-css blog-posts)
+;;;; if unfamiliar, see http://www.lispcast.com/annotated-map
+
+;; side-effecty loop (unformatted, causing text overflow) - from https://clojuredocs.org/clojure.core/doseq
+(doseq [[[a b] [c d]] (map list (sorted-map :1 1 :2 2) (sorted-map :3 3 :4 4))] (prn (* b d)))
+
+;; that same side-effecty loop, formatted
+(doseq [[[a b] [c d]] (map list
+                           (sorted-map :1 1 :2 2)
+                           (sorted-map :3 3 :4 4))]
+  (prn (* b d)))
+
+;; If this proselytizing has worked, check out:
+;; http://howistart.org/posts/clojure/1</code></pre>
+      </section>
+
+      <section>
+        <h2 id="imagequilts">ImageQuilts</h2>
+        <p>Tufte CSS provides support for Edward Tufte and Adam Schwartz’s <a href="http://imagequilts.com/">ImageQuilts</a>. See the <a href="http://www.edwardtufte.com/bboard/q-and-a-fetch-msg?msg_id=0003wk">ET forum announcement thread</a> for more on quilts. Some have ragged edges, others straight. Include these images just as you would any other <code>figure</code>.</p>
+        <p>This is an ImageQuilt surveying Chinese calligraphy, placed in a full-width figure to accomodate its girth:</p>
+        <figure class="fullwidth"><img src="assets/img/imagequilt-chinese-calligraphy.png" alt="Image of Chinese Calligraphy"/></figure>
+        <p>Here is an ImageQuilt of 47 animal sounds over and over, in a figure constrained to the main text region. This quilt has ragged edges, but the image itself is of course still rectangular.</p>
+        <figure><img src="assets/img/imagequilt-animal-sounds.png" alt="Image of animal sounds"/></figure>
+      </section>
+
+      <section>
+        <h2 id="animated-sidenotes">Animated Margin Notes</h2>
+        <p>Sidenotes can hold more than text. An inline SVG with CSS <code>@keyframes</code> stays crisp at any resolution, inherits <code>currentColor</code> so it adapts to dark mode automatically, and requires no external files or JavaScript — ideal for algorithm diagrams alongside prose.</p>
+        <p>The margin note here animates a tiled CUDA matrix multiplication.<label for="mn-cuda-matmul" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-cuda-matmul" class="margin-toggle"/><span class="marginnote"><svg viewBox="0 0 144 64" xmlns="http://www.w3.org/2000/svg" style="width:100%;display:block;margin-bottom:.5rem" role="img" aria-label="Animated CUDA tiled matrix multiplication">
+          <!-- A highlights: amber, rows 0-1 then rows 2-3 -->
+          <rect class="mm-aTop" fill="#d97706" opacity="0" x="4" y="16" width="40" height="20"/>
+          <rect class="mm-aBot" fill="#d97706" opacity="0" x="4" y="36" width="40" height="20"/>
+          <!-- B highlights: blue, cols 0-1 then cols 2-3 -->
+          <rect class="mm-bL" fill="#3b82f6" opacity="0" x="52" y="16" width="20" height="40"/>
+          <rect class="mm-bR" fill="#3b82f6" opacity="0" x="72" y="16" width="20" height="40"/>
+          <!-- C output tiles: green -->
+          <rect class="mm-cTL" fill="#16a34a" opacity="0" x="100" y="16" width="20" height="20"/>
+          <rect class="mm-cTR" fill="#16a34a" opacity="0" x="120" y="16" width="20" height="20"/>
+          <rect class="mm-cBL" fill="#16a34a" opacity="0" x="100" y="36" width="20" height="20"/>
+          <rect class="mm-cBR" fill="#16a34a" opacity="0" x="120" y="36" width="20" height="20"/>
+          <!-- Grid lines on top of highlights -->
+          <g stroke="currentColor" stroke-opacity=".3" stroke-width=".6" fill="none">
+            <rect x="4" y="16" width="40" height="40"/>
+            <line x1="14" y1="16" x2="14" y2="56"/><line x1="24" y1="16" x2="24" y2="56"/><line x1="34" y1="16" x2="34" y2="56"/>
+            <line x1="4" y1="26" x2="44" y2="26"/><line x1="4" y1="36" x2="44" y2="36"/><line x1="4" y1="46" x2="44" y2="46"/>
+            <rect x="52" y="16" width="40" height="40"/>
+            <line x1="62" y1="16" x2="62" y2="56"/><line x1="72" y1="16" x2="72" y2="56"/><line x1="82" y1="16" x2="82" y2="56"/>
+            <line x1="52" y1="26" x2="92" y2="26"/><line x1="52" y1="36" x2="92" y2="36"/><line x1="52" y1="46" x2="92" y2="46"/>
+            <rect x="100" y="16" width="40" height="40"/>
+            <line x1="110" y1="16" x2="110" y2="56"/><line x1="120" y1="16" x2="120" y2="56"/><line x1="130" y1="16" x2="130" y2="56"/>
+            <line x1="100" y1="26" x2="140" y2="26"/><line x1="100" y1="36" x2="140" y2="36"/><line x1="100" y1="46" x2="140" y2="46"/>
+          </g>
+          <!-- Matrix and operator labels -->
+          <text x="24" y="11" text-anchor="middle" font-size="9" font-style="italic" fill="currentColor" font-family="et-book,Georgia,serif">A</text>
+          <text x="72" y="11" text-anchor="middle" font-size="9" font-style="italic" fill="currentColor" font-family="et-book,Georgia,serif">B</text>
+          <text x="120" y="11" text-anchor="middle" font-size="9" font-style="italic" fill="currentColor" font-family="et-book,Georgia,serif">C</text>
+          <text x="48" y="38" text-anchor="middle" font-size="9" fill="currentColor" opacity=".45">&#215;</text>
+          <text x="96" y="38" text-anchor="middle" font-size="9" fill="currentColor" opacity=".45">=</text>
+        </svg>Tiled CUDA <em>matmul</em>: each of the four thread blocks computes a 2&#215;2 output tile of <em>C</em> (green) by loading rows of <em>A</em> (amber) and columns of <em>B</em> (blue) into shared memory. On hardware, all four blocks run concurrently.</span> Each of four CUDA thread blocks claims a 2&#215;2 output tile, loading the corresponding rows of <em>A</em> and columns of <em>B</em> into shared memory before computing the dot products. The sequential view here shows which data each block touches; on real hardware all four blocks run in parallel, which is exactly why tiling reduces redundant global-memory traffic.</p>
+      </section>
+
+      <section>
+        <h2 id="animated-canvas-sidenote">Animated Canvas 2D Sidenote</h2>
+        <p>Canvas 2D swaps SVG's declarative model for an explicit JavaScript loop — every frame you clear the canvas, update state, and redraw from scratch.<label for="mn-canvas-bounce" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-canvas-bounce" class="margin-toggle"/><span class="marginnote"><canvas id="canvas-bounce" width="140" height="80" style="width:100%;display:block;margin-bottom:.5rem"></canvas>Immediate-mode Canvas 2D: three dots bounce freely inside a box. Each frame calls <code>clearRect</code>, moves every dot, and redraws — no retained scene graph, just pixels overwritten sixty times a second.</span> This makes Canvas 2D natural for physics and particle systems where every object's position changes each frame regardless. The trade-off is that nothing is preserved between frames — if you stop calling <code>requestAnimationFrame</code>, the canvas simply freezes on its last painted state.</p>
+      </section>
+
+      <section>
+        <h2 id="animated-webgpu">Animated WebGPU</h2>
+        <p>WebGPU exposes the full modern GPU pipeline in the browser. A compute shader performs the matrix multiplication tile by tile, writing results into a shared storage buffer; the vertex shader reads that same buffer to position a quad for every matrix cell; the fragment shader reads it again to colour cells amber (<em>A</em> rows), blue (<em>B</em> columns), or green (<em>C</em> tiles). All three stages run within a single command encoder — the GPU guarantees compute output is visible to the render pass that follows.<label for="mn-webgpu" class="margin-toggle">&#8853;</label><input type="checkbox" id="mn-webgpu" class="margin-toggle"/><span class="marginnote"><canvas id="canvas-webgpu" width="220" height="90" style="width:100%;display:block;margin-bottom:0.3rem"></canvas><span id="webgpu-fallback" style="display:none;font-size:1rem;color:#888">WebGPU is not available in this browser.</span>Tiled 4&#215;4 matmul on the GPU. Each step the compute shader fills one 2&#215;2 tile of <em>C</em> (green); vertex and fragment shaders read the same storage buffer to render the grid. Amber rows of <em>A</em> and blue columns of <em>B</em> show the data each tile reads; fragment opacity reflects actual computed values.</span> Unlike SVG keyframes or Canvas 2D, no CPU draws anything — the GPU computes and visualises simultaneously, all three shader stages sharing one buffer inside a single command encoder submission.</p>
+      </section>
+
+      <section>
+        <h2 id="epilogue">Epilogue</h2>
+        <p>Many thanks go to Edward Tufte for leading the way with his work. It is only through his kind and careful editing that this project accomplishes what it does. All errors of implementation are of course mine.</p>
+      </section>
+    </article>
+  <script>
+    (function () {
+      var canvas = document.getElementById('canvas-bounce');
+      if (!canvas) return;
+      var ctx = canvas.getContext('2d');
+      var W = canvas.width, H = canvas.height;
+      var balls = [
+        { x: 35,  y: 20, vx:  1.1, vy:  0.75, r: 5, color: '#d97706' },
+        { x: 70,  y: 55, vx: -0.85, vy:  1.0,  r: 5, color: '#3b82f6' },
+        { x: 110, y: 30, vx:  0.65, vy: -0.9,  r: 5, color: '#16a34a' },
+      ];
+      function frame() {
+        ctx.clearRect(0, 0, W, H);
+        ctx.strokeStyle = 'rgba(128,128,128,0.25)';
+        ctx.lineWidth = 0.6;
+        ctx.strokeRect(0.3, 0.3, W - 0.6, H - 0.6);
+        balls.forEach(function (b) {
+          b.x += b.vx;
+          b.y += b.vy;
+          if (b.x - b.r < 0)  { b.x = b.r;     b.vx =  Math.abs(b.vx); }
+          if (b.x + b.r > W)  { b.x = W - b.r; b.vx = -Math.abs(b.vx); }
+          if (b.y - b.r < 0)  { b.y = b.r;     b.vy =  Math.abs(b.vy); }
+          if (b.y + b.r > H)  { b.y = H - b.r; b.vy = -Math.abs(b.vy); }
+          ctx.beginPath();
+          ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+          ctx.fillStyle = b.color;
+          ctx.fill();
+        });
+        requestAnimationFrame(frame);
+      }
+      frame();
+    })();
+  </script>
+  <script>
+    (async function gpuDemo() {
+      var canvas   = document.getElementById('canvas-webgpu');
+      var fallback = document.getElementById('webgpu-fallback');
+      if (!canvas) return;
+      function bail() { canvas.style.display = 'none'; if (fallback) fallback.style.display = ''; }
+      if (!navigator.gpu) { bail(); return; }
+      var adapter, device;
+      try {
+        adapter = await navigator.gpu.requestAdapter();
+        if (!adapter) throw 0;
+        device  = await adapter.requestDevice();
+      } catch (_) { bail(); return; }
+
+      var gpuCtx = canvas.getContext('webgpu');
+      var fmt    = navigator.gpu.getPreferredCanvasFormat();
+      gpuCtx.configure({ device: device, format: fmt, alphaMode: 'opaque' });
+
+      // Storage buffer: A[0-15] | B[16-31] | C[32-47]  (48 x f32 = 192 bytes)
+      var matBuf = device.createBuffer({
+        size: 192, usage: GPUBufferUsage.STORAGE | GPUBufferUsage.COPY_DST,
+      });
+      device.queue.writeBuffer(matBuf,  0, new Float32Array([2,1,0,1, 1,3,1,0, 0,1,2,1, 1,0,1,3])); // A
+      device.queue.writeBuffer(matBuf, 64, new Float32Array([1,2,1,0, 2,1,0,1, 1,0,2,1, 0,1,1,2])); // B
+
+      // Uniform buffer: step (u32) padded to 16 bytes
+      var stepBuf = device.createBuffer({
+        size: 16, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST,
+      });
+
+      // ── Compute shader ────────────────────────────────────────────────────────
+      var cSrc = [
+        'struct P { step: u32, _a: u32, _b: u32, _c: u32 }',
+        '@group(0) @binding(0) var<storage, read_write> m: array<f32, 48>;',
+        '@group(0) @binding(1) var<uniform> p: P;',
+        '@compute @workgroup_size(2, 2)',
+        'fn main(@builtin(global_invocation_id) g: vec3u) {',
+        '  let s   = p.step;',
+        '  let row = (s / 2u) * 2u + g.y;',
+        '  let col = (s % 2u) * 2u + g.x;',
+        '  var sum = 0.0;',
+        '  for (var k = 0u; k < 4u; k++) {',
+        '    sum += m[row * 4u + k] * m[16u + k * 4u + col];',
+        '  }',
+        '  m[32u + row * 4u + col] = sum;',
+        '}',
+      ].join('\n');
+
+      var cBGL = device.createBindGroupLayout({ entries: [
+        { binding: 0, visibility: GPUShaderStage.COMPUTE, buffer: { type: 'storage' } },
+        { binding: 1, visibility: GPUShaderStage.COMPUTE, buffer: { type: 'uniform' } },
+      ]});
+      var cPL = device.createComputePipeline({
+        layout:  device.createPipelineLayout({ bindGroupLayouts: [cBGL] }),
+        compute: { module: device.createShaderModule({ code: cSrc }), entryPoint: 'main' },
+      });
+      var cBG = device.createBindGroup({ layout: cBGL, entries: [
+        { binding: 0, resource: { buffer: matBuf  } },
+        { binding: 1, resource: { buffer: stepBuf } },
+      ]});
+
+      // ── Render shaders ───────────────────────────────────────────────────────
+      // Canvas 220x90px → NDC helper: x/110-1, 1-y/45
+      // A cells: ox=5, B: ox=73, C: ox=141; cell=12px, pitch=14px, matrix top y=20
+      var rSrc = [
+        'struct P { step: u32, _a: u32, _b: u32, _c: u32 }',
+        '@group(0) @binding(0) var<storage, read> m: array<f32, 48>;',
+        '@group(0) @binding(1) var<uniform> p: P;',
+        'struct Vert {',
+        '  @builtin(position)              pos: vec4f,',
+        '  @location(0) @interpolate(flat) idx: u32,',
+        '}',
+        'fn nd(x: f32, y: f32) -> vec2f {',
+        '  return vec2f(x / 110.0 - 1.0, 1.0 - y / 45.0);',
+        '}',
+        '@vertex',
+        'fn vs(@builtin(vertex_index) vi: u32, @builtin(instance_index) ii: u32) -> Vert {',
+        '  let mat = ii / 16u;',
+        '  let c   = ii % 16u;',
+        '  let row = c / 4u;',
+        '  let col = c % 4u;',
+        '  var ox  = array<f32, 3>(5.0, 73.0, 141.0);',
+        '  let x0  = ox[mat] + f32(col) * 14.0;',
+        '  let y0  = 20.0    + f32(row) * 14.0;',
+        '  var pts = array<vec2f, 4>(',
+        '    nd(x0, y0), nd(x0 + 12.0, y0), nd(x0, y0 + 12.0), nd(x0 + 12.0, y0 + 12.0)',
+        '  );',
+        '  var qi = array<u32, 6>(0u, 1u, 2u, 1u, 3u, 2u);',
+        '  let q  = qi[vi % 6u];',
+        '  return Vert(vec4f(pts[q], 0.0, 1.0), ii);',
+        '}',
+        '@fragment',
+        'fn fs(v: Vert) -> @location(0) vec4f {',
+        '  let mat  = v.idx / 16u;',
+        '  let c    = v.idx % 16u;',
+        '  let row  = c / 4u;',
+        '  let col  = c % 4u;',
+        '  let s    = p.step;',
+        '  let ar   = (s / 2u) * 2u;',
+        '  let ac   = (s % 2u) * 2u;',
+        '  let ir   = row >= ar && row < ar + 2u;',
+        '  let ic   = col >= ac && col < ac + 2u;',
+        '  let cs   = (row / 2u) * 2u + (col / 2u);',
+        '  let done = cs < s;',
+        '  if (mat == 0u) {',
+        '    let a = clamp(m[c] / 3.0, 0.2, 1.0);',
+        '    if (ir) { return vec4f(0.851, 0.467, 0.024, 0.35 + a * 0.40); }',
+        '    return    vec4f(0.851, 0.467, 0.024, a * 0.15);',
+        '  } else if (mat == 1u) {',
+        '    let b = clamp(m[16u + c] / 2.0, 0.2, 1.0);',
+        '    if (ic) { return vec4f(0.231, 0.510, 0.965, 0.35 + b * 0.40); }',
+        '    return    vec4f(0.231, 0.510, 0.965, b * 0.15);',
+        '  } else {',
+        '    if (ir && ic) { return vec4f(0.086, 0.639, 0.290, 0.85); }',
+        '    if (done) {',
+        '      let cv = clamp(m[32u + c] / 8.0, 0.0, 1.0);',
+        '      return vec4f(0.086, 0.639, 0.290, 0.20 + cv * 0.35);',
+        '    }',
+        '    return vec4f(0.45, 0.45, 0.45, 0.12);',
+        '  }',
+        '}',
+      ].join('\n');
+
+      var rBGL = device.createBindGroupLayout({ entries: [
+        { binding: 0, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: { type: 'read-only-storage' } },
+        { binding: 1, visibility: GPUShaderStage.VERTEX | GPUShaderStage.FRAGMENT, buffer: { type: 'uniform' } },
+      ]});
+      var rMod = device.createShaderModule({ code: rSrc });
+      var rPL  = device.createRenderPipeline({
+        layout:   device.createPipelineLayout({ bindGroupLayouts: [rBGL] }),
+        vertex:   { module: rMod, entryPoint: 'vs' },
+        fragment: {
+          module: rMod, entryPoint: 'fs',
+          targets: [{ format: fmt, blend: {
+            color: { srcFactor: 'src-alpha', dstFactor: 'one-minus-src-alpha', operation: 'add' },
+            alpha: { srcFactor: 'one',       dstFactor: 'one-minus-src-alpha', operation: 'add' },
+          }}],
+        },
+        primitive: { topology: 'triangle-list' },
+      });
+      var rBG = device.createBindGroup({ layout: rBGL, entries: [
+        { binding: 0, resource: { buffer: matBuf  } },
+        { binding: 1, resource: { buffer: stepBuf } },
+      ]});
+
+      var dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var bg   = dark ? { r: 0.082, g: 0.082, b: 0.082, a: 1 }
+                      : { r: 1.0,   g: 1.0,   b: 0.973, a: 1 };
+
+      // ── Render loop ──────────────────────────────────────────────────────────
+      var frame = 0;
+      (function tick() {
+        var step = Math.floor(frame / 90) % 4;
+        device.queue.writeBuffer(stepBuf, 0, new Uint32Array([step, 0, 0, 0]));
+
+        var enc = device.createCommandEncoder();
+
+        // 1. Compute pass — write current 2x2 tile of C into matBuf
+        var cp = enc.beginComputePass();
+        cp.setPipeline(cPL);
+        cp.setBindGroup(0, cBG);
+        cp.dispatchWorkgroups(1); // 1 workgroup of 2x2 threads = 4 output cells
+        cp.end();
+
+        // 2. Render pass — vertex + fragment read from the same matBuf
+        var rp = enc.beginRenderPass({
+          colorAttachments: [{
+            view:       gpuCtx.getCurrentTexture().createView(),
+            clearValue: bg,
+            loadOp:    'clear',
+            storeOp:   'store',
+          }],
+        });
+        rp.setPipeline(rPL);
+        rp.setBindGroup(0, rBG);
+        rp.draw(6, 48); // 6 vertices x 48 instances (3 matrices x 16 cells)
+        rp.end();
+
+        device.queue.submit([enc.finish()]);
+        frame++;
+        requestAnimationFrame(tick);
+      })();
+    })();
+  </script>
+  </body>
+</html>
